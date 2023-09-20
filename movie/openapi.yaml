@@ -93,6 +93,65 @@ paths:
             schema:
               $ref: '#/components/schemas/MovieItem'
         description: Inventory item to add
+
+  /movies/{movieid}/update_rating/{rating}:
+    put:
+      tags:
+        - admins
+      summary: update a movie's rating
+      operationId: update_movie_rating
+      description: updates a movie's rating
+      parameters:
+        - name: movieid
+          in: path
+          required: true
+          description: Movie ID.
+          schema:
+            type: string
+        - name: rating
+          in: path
+          required: true
+          description: Movie rating.
+          schema:
+            type: float
+      responses:
+        '200':
+          description: Movie rating updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        '400':
+          description: movie ID not found
+  /movies/{movieid}/update_title/{title}:
+    put:
+      tags:
+        - admins
+      summary: update a movie's title
+      operationId: update_movie_title
+      description: updates a movie's title
+      parameters:
+        - name: movieid
+          in: path
+          required: true
+          description: Movie ID.
+          schema:
+            type: string
+        - name: title
+          in: path
+          required: true
+          description: Movie title.
+          schema:
+            type: float
+      responses:
+        '200':
+          description: Movie title updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        '400':
+          description: movie ID not found
   /titles:
     get:
       tags:
