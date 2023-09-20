@@ -48,7 +48,7 @@ def add_booking_byuser(userid):
             for day in user_bookings["dates"]:
                 if str(day["date"]) == str(req_date):  # if user already has a booking on date
                     if req_movie in day["movies"]: #if movie is already booked on this day
-                        return make_response(jsonify({"error":"an similar booking already exists"}),409)
+                        return make_response(jsonify({"error":"a similar booking already exists"}),409)
                     day["movies"].append(req_movie)  # then add movie to existing list
                     return make_response(jsonify(user_bookings), 200)
 
