@@ -64,7 +64,7 @@ def add_booking_byuser(userid):
 def movie_showing_on(date, movieid):  # returns True if movie is showing on date, False if not
     showing_on = requests.get(
         "http://localhost:3202/showmovies/" + str(date))  # we get the movies showing on requested date
-    return not (showing_on.status_code != 200 or str(movieid) not in showing_on.json()["movies"])
+    return not (showing_on.status_code != 200 or str(movieid) not in showing_on.json())
 
 
 if __name__ == "__main__":
