@@ -8,11 +8,11 @@ urllib3.disable_warnings()
 
 app = Flask(__name__)
 
+# Defining the server entry point
 PORT = 3203
 HOST = '0.0.0.0'
-#user\databases\users.json
 
-
+# open the database user
 with open('{}/databases/users.json'.format("."), "r") as jsf:
    users = json.load(jsf)["users"]
 
@@ -22,6 +22,7 @@ def home():
 
 @app.route("/user", methods = ['GET'])
 def get_user_byid():
+   # get the query parameter of user_id
    user_id = request.args.get("user_id")
    date = request.args.get("date")
    movieid = request.args.get("movieid")
