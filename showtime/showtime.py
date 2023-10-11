@@ -28,7 +28,7 @@ def get_movies_bydate(date):
    # search the date in database and return the reponse of movies at the date
    for elem in schedule:
       if str(elem["date"]) == str(date):
-         res = make_response(jsonify(elem["movies"]),200)
+         res = make_response(jsonify(elem),200)
          return res
    
    res = make_response(jsonify({"error":"bad input parameter"}),400)
