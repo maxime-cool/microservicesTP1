@@ -45,14 +45,16 @@ def get_user_byid():
 
 @app.route("/user/booking/movies", methods=['GET'])
 def get_user_booking_movies():
+    # get the query parameter of user_id
     user_id = request.args.get("user_id")
+    # check user existence
     user = next((user for user in users if user['id'] == user_id), None)
-    if user:
+    if user: # if user exists, firstly go to the booking serveur to get the information of booking
         res = []
         bookings = requests.get("http://localhost:3201/bookings/" + str(user_id), verify=False)
         if bookings.status_code != 200:
             return make_response(jsonify({"error": "user ID no bookings"}), 400)
-
+        # if booking exists, next go to check every record of booking to get movies
         bookings_data = bookings.json()
         for elem in bookings_data["dates"]:
             info = {"date": elem["date"], "movies": []}
