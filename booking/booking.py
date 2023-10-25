@@ -56,7 +56,7 @@ def add_booking_byuser(userid):
             user_bookings["dates"].append(booking_object)
             return make_response(jsonify(user_bookings), 200)
 
-    # if user does not have any booking on this date then add user to DB
+    # if user does not have any booking on this date, then we check that it exists and add user to DB
     bookings.append({
         "userid": userid,
         "dates": [booking_object]
@@ -66,7 +66,7 @@ def add_booking_byuser(userid):
 
 def movie_showing_on(date, movieid):  # returns True if movie is showing on date, False if not
     showing_on = requests.get(
-        "http://showtime:3202/showmovies/" + str(date))  # we get the movies showing on requested date
+        "http://localhost:3202/showmovies/" + str(date))  # we get the movies showing on requested date
     return not (showing_on.status_code != 200 or str(movieid) not in showing_on.json())
 
 

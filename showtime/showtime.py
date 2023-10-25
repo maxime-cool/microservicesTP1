@@ -5,11 +5,11 @@ from werkzeug.exceptions import NotFound
 app = Flask(__name__)
 
 PORT = 3202
-HOST = '0.0.0.0'
+HOST = 'localhost'
 
 #showtime\databases\times.json
 
-with open('{}/showtime/databases/times.json'.format("."), "r") as jsf:
+with open('{}/databases/times.json'.format("."), "r") as jsf:
    schedule = json.load(jsf)["schedule"]
 
 @app.route("/", methods=['GET'])
