@@ -40,6 +40,7 @@ def add_booking_byuser(userid):
     if not (req["date"] or req["movieid"]):  # request body does not have a date or a movieid
         return make_response(jsonify({"error": "incorrect request"}), 400)
     req_date, req_movie = req["date"], req["movieid"]
+    booking_object = {"date": req_date, "movies": [req_movie]}
     if not movie_showing_on(req_date, req_movie):  # movie is not showing on date or error with showtime service
         return make_response(jsonify({"error": "movie or date not found"}))
 
@@ -47,17 +48,19 @@ def add_booking_byuser(userid):
         if str(user_bookings["userid"]) == str(userid):  # if userid exists
             for day in user_bookings["dates"]:
                 if str(day["date"]) == str(req_date):  # if user already has a booking on date
-                    if req_movie in day["movies"]: #if movie is already booked on this day
-                        return make_response(jsonify({"error":"a similar booking already exists"}),409)
+                    if req_movie in day["movies"]:  # if movie is already booked on this day
+                        return make_response(jsonify({"error": "a similar booking already exists"}), 409)
                     day["movies"].append(req_movie)  # then add movie to existing list
                     return make_response(jsonify(user_bookings), 200)
 
-            user_bookings["dates"].append({
-                "date": req_date,
-                "movies": [req_movie]
-            })  # if user does not have any booking on this date then add request to user
+            user_bookings["dates"].append(booking_object)
             return make_response(jsonify(user_bookings), 200)
 
+    # if user does not have any booking on this date then add user to DB
+    bookings.append({
+        "userid": userid,
+        "dates": [booking_object]
+    })
     return make_response(jsonify({"error": "userid is not found"}), 400)
 
 
