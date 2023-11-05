@@ -30,7 +30,7 @@ def check_user_booking():
     movieid = request.args.get("movieid")
     data = {"date": date, "movieid": movieid}
     user = next((user for user in users if str(user['id']) == str(user_id)), None)
-    if user:
+    if user:  #If user exists, check the booking for user is avaible or not
         url = "http://localhost:3201/bookings/" + str(user_id)
         booking = requests.post(url, json=data)
         print(booking.text)
@@ -56,7 +56,7 @@ def get_user_booking_movies():
         for elem in bookings_data["dates"]:
             info = {"date": elem["date"], "movies": []}
             movies_id = elem["movies"]
-            for id in movies_id:
+            for id in movies_id:  #For every movie, get the details from the server movie
                 movie = requests.get("http://localhost:3200/movies/" + str(id))
                 if movie.status_code != 200:
                     return make_response(jsonify({"error": "movies in booking not found"}), 400)

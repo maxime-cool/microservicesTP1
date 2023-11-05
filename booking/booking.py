@@ -16,24 +16,22 @@ with open('{}/databases/bookings.json'.format("."), "r") as jsf:
 def home():
     return "<h1 style='color:blue'>Welcome to the Booking service!</h1>"
 
-
 @app.route("/bookings", methods=["GET"])
 def get_json():
     res = make_response(jsonify(bookings), 200)
     return res
 
-
+# Get the booking information bu giving the user id
 @app.route("/bookings/<userid>", methods=["GET"])
 def get_booking_for_user(userid):
     for booking in bookings:
         if str(booking["userid"]) == str(userid):
             res = make_response(jsonify(booking), 200)
             return res
-
     res = make_response(jsonify({"error": "bookings not found for userid"}), 400)
     return res
 
-
+# Add a new booking for the user by user id
 @app.route("/bookings/<userid>", methods=["POST"])
 def add_booking_byuser(userid):
     req = request.get_json()
@@ -51,17 +49,28 @@ def add_booking_byuser(userid):
                     if req_movie in day["movies"]:  # if movie is already booked on this day
                         return make_response(jsonify({"error": "a similar booking already exists"}), 409)
                     day["movies"].append(req_movie)  # then add movie to existing list
+                    save_file(bookings)
                     return make_response(jsonify(user_bookings), 200)
 
             user_bookings["dates"].append(booking_object)
+            save_file(bookings)
             return make_response(jsonify(user_bookings), 200)
 
-    # if user does not have any booking on this date, then we check that it exists and add user to DB
+    # If user does not have any booking on this date, then we check that it exists and add user to DB
     bookings.append({
         "userid": userid,
         "dates": [booking_object]
     })
+    save_file(bookings)
     return make_response(jsonify({"error": "userid is not found"}), 400)
+
+# Function to save the changement in the booking database
+def save_file(bookings):
+    try:
+        with open('{}/booking/databases/bookings.json'.format("."), "w") as jsf:
+            json.dump({"bookings": bookings}, jsf)
+    except Exception as e:
+        print(f"error when saving: {e}")
 
 
 def movie_showing_on(date, movieid):  # returns True if movie is showing on date, False if not
