@@ -21,9 +21,9 @@ with open('{}/databases/users.json'.format("."), "r") as jsf:
 def home():
     return "<h1 style='color:blue'>Welcome to the User service!</h1>"
 
-
+# an entry point for obtaining reservations from a user's name or ID 
 @app.route("/user", methods=['GET'])
-def get_user_byid():
+def check_user_booking():
     # get the query parameter of user_id
     user_id = request.args.get("user_id")
     date = request.args.get("date")
@@ -34,15 +34,12 @@ def get_user_byid():
         url = "http://localhost:3201/bookings/" + str(user_id)
         booking = requests.post(url, json=data)
         print(booking.text)
-        if booking.status_code == 200:
-            res = make_response(jsonify(booking.json()), booking.status_code)
-        else:
-            res = make_response(jsonify(booking.json()), booking.status_code)
+        res = make_response(jsonify(booking.json()), booking.status_code)
     else:
         res = make_response(jsonify({"error": "user ID not found"}), 400)
     return res
 
-
+# an entry point for retrieving film information for a user's reservations 
 @app.route("/user/booking/movies", methods=['GET'])
 def get_user_booking_movies():
     # get the query parameter of user_id
