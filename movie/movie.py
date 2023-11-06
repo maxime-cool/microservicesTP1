@@ -28,6 +28,7 @@ def get_json():
     res = make_response(jsonify(movies),200)
     return res
 
+# Get movie by giving id
 @app.route("/movies/<movieid>", methods=["GET"])
 def get_movie_byid(movieid):
     for movie in movies:
@@ -36,6 +37,7 @@ def get_movie_byid(movieid):
             return res
     return make_response(jsonify({"error":"Movie ID not found"}), 400)
 
+# Get movie by giving the title
 @app.route("/moviesbytitle", methods=['GET'])
 def get_movie_bytitle():
     json = ""
@@ -44,7 +46,6 @@ def get_movie_bytitle():
         for movie in movies:
             if str(movie["title"]) == str(req["title"]):
                 json = movie
-
     if not json:
         res = make_response(jsonify({"error":"movie title not found"}),400)
     else:

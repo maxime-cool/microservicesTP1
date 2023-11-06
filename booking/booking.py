@@ -49,10 +49,15 @@ def add_booking_byuser(userid):
                     if req_movie in day["movies"]:  # if movie is already booked on this day
                         return make_response(jsonify({"error": "a similar booking already exists"}), 409)
                     day["movies"].append(req_movie)  # then add movie to existing list
+                    index = bookings.index(user_bookings)
+                    index1 = user_bookings["dates"].index(day)
+                    bookings[index]["dates"][index1]["movies"].append(req_movie) 
                     save_file(bookings)
                     return make_response(jsonify(user_bookings), 200)
 
             user_bookings["dates"].append(booking_object)
+            index = bookings.index(user_bookings)
+            bookings[index]["dates"].append(booking_object)
             save_file(bookings)
             return make_response(jsonify(user_bookings), 200)
 
@@ -67,7 +72,7 @@ def add_booking_byuser(userid):
 # Function to save the changement in the booking database
 def save_file(bookings):
     try:
-        with open('{}/booking/databases/bookings.json'.format("."), "w") as jsf:
+        with open('{}/databases/bookings.json'.format("."), "w") as jsf:
             json.dump({"bookings": bookings}, jsf)
     except Exception as e:
         print(f"error when saving: {e}")
