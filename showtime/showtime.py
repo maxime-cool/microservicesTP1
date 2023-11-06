@@ -5,7 +5,7 @@ from werkzeug.exceptions import NotFound
 app = Flask(__name__)
 
 PORT = 3202
-HOST = 'localhost'
+HOST = 'showtime'
 
 with open('{}/databases/times.json'.format("."), "r") as jsf:
    schedule = json.load(jsf)["schedule"]
