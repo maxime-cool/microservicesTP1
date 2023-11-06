@@ -61,7 +61,7 @@ def create_movie(movieid):
             return make_response(jsonify({"error":"movie ID already exists"}),409)
     movies.append(req)
     with open('{}/databases/movies.json'.format("."), "w") as jsf:
-        json.dump({"bookings": movies}, jsf)
+        json.dump({"movies": movies}, jsf)
     res = make_response(jsonify({"message":"movie added"}),200)
     return res
 
@@ -72,7 +72,7 @@ def update_movie_rating(movieid, rate):
         if str(movie["id"]) == str(movieid):
             movie["rating"] = float(rate)
             with open('{}/databases/movies.json'.format("."), "w") as jsf:
-                json.dump({"bookings": movies}, jsf)
+                json.dump({"movies": movies}, jsf)
             res = make_response(jsonify(movie),200)
             return res
     res = make_response(jsonify({"error":"movie ID not found"}),400)
@@ -85,7 +85,7 @@ def del_movie(movieid):
         if str(movie["id"]) == str(movieid):
             movies.remove(movie)
             with open('{}/databases/movies.json'.format("."), "w") as jsf:
-                json.dump({"bookings": movies}, jsf)
+                json.dump({"movies": movies}, jsf)
             return make_response(jsonify(movie),200)
     res = make_response(jsonify({"error":"movie ID not found"}),400)
     return res
@@ -97,7 +97,7 @@ def change_title(movieid, title):
         if str(movie["id"]) == str(movieid):
             movie["title"] = str(title)
             with open('{}/databases/movies.json'.format("."), "w") as jsf:
-                json.dump({"bookings": movies}, jsf)
+                json.dump({"movies": movies}, jsf)
             return make_response(jsonify(movie), 200)
     res = make_response(jsonify({"error": "movie ID not found"}), 400)
     return res
