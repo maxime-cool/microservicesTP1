@@ -2,11 +2,11 @@
 
 ### Zuoyu zhang & Maxime Garnier
 
-#### nous avons faites le TP vert pour TP REST, nous allons expliquer comment démarrer notre application dans Docker:
+#### nous avons faites le TP vert pour TP REST, nous allons expliquer comment démarrer notre application dans Docker: 
 
 nécessité : Docker, Docker compose, Git 
 
-1. Allez d'abord sur le site GitHub et téléchargez tout le code dont vous avez besoin à l'aide de la commande : $ git clone 
+1. Allez d'abord sur le site GitHub et téléchargez tout le code dont vous avez besoin à l'aide de la commande : $ git clone https://github.com/maxime-cool/microservicesTP1.git
 
 2. Allez dans le dossier du code téléchargé dans le terminal : $ cd microservicesTP1
 
