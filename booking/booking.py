@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 app = Flask(__name__)
 
 PORT = 3201
-HOST = 'localhost'
+HOST = 'booking'
 
 with open('{}/databases/bookings.json'.format("."), "r") as jsf:
     bookings = json.load(jsf)["bookings"]
@@ -80,7 +80,7 @@ def save_file(bookings):
 
 def movie_showing_on(date, movieid):  # returns True if movie is showing on date, False if not
     showing_on = requests.get(
-        "http://localhost:3202/showmovies/" + str(date))  # we get the movies showing on requested date
+        "http://showtime:3202/showmovies/" + str(date))  # we get the movies showing on requested date
     return not (showing_on.status_code != 200 or str(movieid) not in showing_on.json()["movies"])
 
 
