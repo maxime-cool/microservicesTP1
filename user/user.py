@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Defining the server entry point
 PORT = 3203
-HOST = 'user'
+HOST = 'localhost'
 
 # open the database user
 with open('{}/databases/users.json'.format("."), "r") as jsf:
@@ -21,25 +21,28 @@ with open('{}/databases/users.json'.format("."), "r") as jsf:
 def home():
     return "<h1 style='color:blue'>Welcome to the User service!</h1>"
 
-@app.route("/uerjson", methods=["GET"])
-def get_json():
-    res = make_response(jsonify(users), 200)
-    return res
 
-# an entry point for obtaining reservations from a user's name or ID 
-@app.route("/user", methods=['GET'])
-def check_user_booking():
+# an entry point to book for a specific user ID
+@app.route("/user", methods=['POST'])
+def book():
     # get the query parameter of user_id
     user_id = request.args.get("user_id")
     date = request.args.get("date")
     movie_id = request.args.get("movie_id")
     data = {"date": date, "movie_id": movie_id}
     user = next((user for user in users if str(user['id']) == str(user_id)), None)
-    if user:  #If user exists, check the booking for user is avaible or not
-        url = "http://booking:3201/bookings/" + str(user_id)
-        booking = requests.post(url, json=data)
-        print(booking.text)
-        res = make_response(jsonify(booking.json()), booking.status_code)
+    if user:  # If user exists, check the booking for user is avaible or not
+        url = "http://localhost:3201/bookings/" + str(user_id)
+        booking_request = requests.post(url, json=data)
+        print(booking_request.text)
+        return make_response(jsonify(booking_request.json()), booking_request.status_code)
+    return make_response(jsonify({'error': 'ID does not match any user'}), 404)
+
+
+def check_user_existence(userid):  # checks user existence
+    user = next((user for user in users if str(user['id']) == str(userid)), None)
+    if not user:
+        return False
     else:
         return True
 
@@ -53,7 +56,7 @@ def get_bookings_data():
     user = next((user for user in users if user['id'] == user_id), None)
     if user:  # if user exists, firstly go to the booking serveur to get the information of booking
         res = []
-        bookings = requests.get("http://booking:3201/bookings/" + str(user_id), verify=False)
+        bookings = requests.get("http://localhost:3201/bookings/" + str(user_id), verify=False)
         if bookings.status_code != 200:
             return make_response(jsonify({"error": "this user does not have bookings"}), 400)
         # if booking exists, next go to check every record of booking to get movies
@@ -61,8 +64,8 @@ def get_bookings_data():
         for elem in bookings_data["dates"]:
             info = {"date": elem["date"], "movies": []}
             movies_id = elem["movies"]
-            for id in movies_id:  #For every movie, get the details from the server movie
-                movie = requests.get("http://movie:3200/movies/" + str(id))
+            for movie_id in movies_id:  # For every movie, get the details from the server movie
+                movie = requests.get("http://localhost:3200/movies/by_id" + f'?id={movie_id}')
                 if movie.status_code != 200:
                     return make_response(jsonify({"error": "movies in booking not found"}), 404)
                 info["movies"].append(movie.json())
