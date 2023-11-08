@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 app = Flask(__name__)
 
 PORT = 3200
-HOST = 'localhost'
+HOST = 'movie'
 
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
     movies = json.load(jsf)["movies"]
