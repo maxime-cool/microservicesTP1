@@ -69,14 +69,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingsUser'
-        "400":
-          description: bad input parameter
+        "404":
+          description: movie or date not found
     post:
       tags:
       - admins
       summary: add a booking for a user
-      description: Adds a booking for the user, the service showtimes have to be requested to check the validity of the booking that is asked
-      operationId: add_booking_byuser
+      description: Adds a booking for the user, the service Showtime have to be requested to check the validity of the booking that is asked
+      operationId: add_booking_by_user
       parameters:
       - name: userid
         in: path
@@ -100,9 +100,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsUser'
         "400":
-          description: incorrect request
+          description: incorrect body format
+
         "409":
-          description: an existing item already exists
+          description: this booking already exists
 components:
   schemas:
     AllBookings:

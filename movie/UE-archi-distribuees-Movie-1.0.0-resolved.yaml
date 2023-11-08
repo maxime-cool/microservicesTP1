@@ -3,7 +3,7 @@ openapi: 3.1.0
 info:
   title: Movie API
   summary: This is the API of the Movie service
-  description: This is the API of the Movie service, it should be much much much much much much much much much much much much much much much much much much much much much longer
+  description: This is the API of the Movie service longer
   contact:
     name: Helene Coullon
     url: https://helene-coullon.fr/
@@ -49,16 +49,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllMovies'
-  /movies/{movieid}:
+  /movies/by_id:
     get:
       tags:
       - developers
       summary: get the movie by its id
       description: By passing in the appropriate options, you can get info of a Movie
-      operationId: get_movie_byid
+      operationId: get_movie_by_id
       parameters:
-      - name: movieid
-        in: path
+      - name: movie_id
+        in: query
         description: Movie ID.
         required: true
         schema:
@@ -72,64 +72,14 @@ paths:
                 $ref: '#/components/schemas/MovieItem'
         "400":
           description: bad input parameter
-    post:
-      tags:
-      - admins
-      summary: add a movie item
-      description: Adds a movie to the system
-      operationId: create_movie
-      parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      requestBody:
-        description: Inventory item to add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MovieItem'
-      responses:
-        "200":
-          description: Movie created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MovieItem'
-        "409":
-          description: an existing item already exists
-    delete:
-      tags:
-      - admins
-      summary: delete a movie item
-      description: Adds a movie to the system
-      operationId: del_movie
-      parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: item deleted
-        "400":
-          description: ID not found
-  /titles:
+  /movies/by_title:
     get:
       tags:
       - developers
       summary: get the movie by its title
       description: |
         By passing in the appropriate options, you can get Movie info
-      operationId: get_movie_bytitle
+      operationId: get_movie_by_title
       parameters:
       - name: title
         in: query
@@ -148,64 +98,72 @@ paths:
                 $ref: '#/components/schemas/MovieItem'
         "400":
           description: bad input parameter
-  /movies/{movieid}/update_rating/{rating}:
+  /movies/update:
+    post:
+      tags:
+        - admins
+      summary: add a movie item
+      description: Adds a movie to the system
+      operationId: create_movie
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieItem'
+      responses:
+        "200":
+          description: Movie created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        "400":
+          description: incorrect body format
+        "409":
+          description: a film with the same ID already exists
+    delete:
+      tags:
+        - admins
+      summary: delete a movie item
+      description: Adds a movie to the system
+      operationId: del_movie
+      requestBody:
+        description: Inventory item to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieItem'
+      responses:
+        "200":
+          description: item deleted
+        "400":
+          description: incorrect body format
+        "404":
+          description: ID does not match any film
     put:
       tags:
         - admins
-      summary: update a movie's rating
-      operationId: update_movie_rating
-      description: updates a movie's rating
-      parameters:
-        - name: movieid
-          in: path
-          required: true
-          description: Movie ID.
-          schema:
-            type: string
-        - name: rating
-          in: path
-          required: true
-          description: Movie rating.
-          schema:
-            type: float
+      summary: update a movie's data
+      operationId: update_movie_data
+      description: updates a movie's data
+      requestBody:
+        description: Inventory item to with data to edit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieItem'
       responses:
         '200':
-          description: Movie rating updated
+          description: Movie data updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MovieItem'
         '400':
-          description: movie ID not found
-  /movies/{movieid}/update_title/{title}:
-    put:
-      tags:
-        - admins
-      summary: update a movie's title
-      operationId: update_movie_title
-      description: updates a movie's title
-      parameters:
-        - name: movieid
-          in: path
-          required: true
-          description: Movie ID.
-          schema:
-            type: string
-        - name: title
-          in: path
-          required: true
-          description: Movie title.
-          schema:
-            type: float
-      responses:
-        '200':
-          description: Movie title updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MovieItem'
-        '400':
-          description: movie ID not found
+          description: incorrect body format
+        '404':
+          description: ID does not match any movie
 components:
   schemas:
     AllMovies:
@@ -221,9 +179,6 @@ components:
     MovieItem:
       type: object
       required:
-        - title
-        - rating
-        - director
         - id
       properties:
         title:
