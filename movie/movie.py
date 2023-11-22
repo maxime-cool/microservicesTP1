@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 app = Flask(__name__)
 
 PORT = 3200
-HOST = 'movie'
+HOST = 'localhost'
 
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
     movies = json.load(jsf)["movies"]
@@ -118,3 +118,4 @@ def update_movie_data():
 if __name__ == "__main__":
     print("Server running in port %s" % (PORT))
     app.run(host=HOST, port=PORT, debug=True)
+
